@@ -1,0 +1,3 @@
+module BlacklightOembed::Solr
+
+end
