@@ -11,6 +11,10 @@ module BlacklightOembed::ControllerOverride
 
     @oembed = @document.to_oembed({:provider_name => @template.application_name, :provider_url => @template.root_url})
 
+    @oembed.select { |key,value| value.is_a? Proc }.each do |key, value|
+      @oembed[key] = value.call(self)
+    end
+
     respond_to do |format|
       format.html { render 'oembed/oembed', :layout => false }
       format.xml { render 'oembed/oembed' }

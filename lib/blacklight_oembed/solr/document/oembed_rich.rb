@@ -15,19 +15,16 @@ module BlacklightOembed::Solr::Document::OembedRich
       :provider_url => '',
       :title => semantic_values[:title],
       :author_name => semantic_values[:author],
-      :html => to_oembed_html
+      :html => (Proc.new do |controller| 
+        template = controller.instance_variable_get("@template"); 
+        template.with_format(:html) { 
+          template.render_document_partial(self, 'oembed') 
+        } 
+      end)
     }).merge(oembed)
   end
 
   def oembed_type
     'rich'
-  end
-
-  def to_oembed_html
-    foo = ActionView::Base.new
-    foo.view_paths = ApplicationController.view_paths
-    foo.extend ApplicationHelper
-    # foo.send :format, 'html'
-    foo.render_document_partial(self, 'oembed')
   end
 end
