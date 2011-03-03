@@ -6,7 +6,7 @@ module BlacklightOembed::ControllerOverride
   end
 
   def oembed
-    url = ActionController::Routing::Routes.recognize_path(params[:url],:method=>:get)
+    url = ActionController::Routing::Routes.recognize_path(URI.parse(params[:url]).path,:method=>:get)
     @response, @document = get_solr_response_for_doc_id(url[:id])
 
     @oembed = @document.to_oembed({:provider_name => @template.application_name, :provider_url => @template.root_url})
