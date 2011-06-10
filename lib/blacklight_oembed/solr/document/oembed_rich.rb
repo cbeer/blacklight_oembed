@@ -16,9 +16,8 @@ module BlacklightOembed::Solr::Document::OembedRich
       :title => semantic_values[:title],
       :author_name => semantic_values[:author],
       :html => (Proc.new do |controller| 
-        template = controller.instance_variable_get("@template"); 
-        template.with_format(:html) { 
-          template.render_document_partial(self, 'oembed') 
+        controller.view_context.with_format(:html) { 
+          controller.view_context.render_document_partial(self, 'oembed') 
         } 
       end)
     }).merge(oembed)
