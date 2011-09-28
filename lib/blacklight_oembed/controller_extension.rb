@@ -1,12 +1,15 @@
 # Meant to be applied on top of a controller that implements
 # Blacklight::SolrHelper. 
-module BlacklightOembed::ControllerOverride
+module BlacklightOembed::ControllerExtension
   def self.included(some_class)
     some_class.helper_method :oembed_config
+    some_class.before_filter do
+      extra_head_content << render_to_string(:partial => 'oembed/autodiscovery_link.html')
+    end
   end
 
   def oembed
-    url = ActionController::Routing::Routes.recognize_path(URI.parse(params[:url]).path,:method=>:get)
+    url = Rails.application.routes.recognize_path(URI.parse(params[:url]).path,:method=>:get)
     @response, @document = get_solr_response_for_doc_id(url[:id])
 
     @oembed = @document.to_oembed({:provider_name => @template.application_name, :provider_url => @template.root_url})
